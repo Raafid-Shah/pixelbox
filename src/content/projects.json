@@ -1,4 +1,40 @@
-[{"slug":"pixelbox","title":"PIXELBOX","blurb":"A portfolio disguised as a lamp-lit room and a console.","tech":["TypeScript","WebGL2"],"url":"#"},
- {"slug":"late-byte","title":"LATE BYTE","blurb":"A neon cafe where every cartridge is a case study.","tech":["SVG","WebAudio"],"url":"#"},
- {"slug":"tube-tv","title":"TUBE TV","blurb":"A curved-glass shader with a channel dial.","tech":["GLSL"],"url":"#"},
- {"slug":"hearth","title":"HEARTH","blurb":"A cassette jukebox that remembers you.","tech":["IndexedDB"],"url":"#"}]
+{
+  "projects": [
+    {
+      "id": "agentic-rag-core",
+      "title": "AGENTIC RAG KERNEL",
+      "category": "AI & ORCHESTRATION",
+      "year": "2026",
+      "version": "v3.2",
+      "tech": ["LLMs", "Vector DB", "Tool Calling", "Python"],
+      "summary": "Autonomous multi-agent orchestration engine with recursive verification loops and sub-50ms tool execution routing.",
+      "metrics": ["99.4% Retrieval Precision", "<45ms Latency", "Zero Hallucination Guard"],
+      "demoUrl": "https://github.com",
+      "caseStudy": "Engineered a fault-tolerant multi-agent loop that dynamically decomposes complex queries into verified sub-tasks, minimizing token waste and execution drift."
+    },
+    {
+      "id": "pixelbox-engine",
+      "title": "PIXELBOX V3 ENGINE",
+      "category": "SYSTEMS & GRAPHICS",
+      "year": "2026",
+      "version": "v3.0",
+      "tech": ["TypeScript", "WebGL2", "AudioWorklet", "Vite"],
+      "summary": "Lamp-lit 1989 arcade cafe portfolio operating system featuring a 3-pass CRT shader and unified input bus.",
+      "metrics": ["60 FPS Locked", "<150KB Gzipped", "Zero Hot-Path GC"],
+      "demoUrl": "https://github.com",
+      "caseStudy": "Built a deterministic 60Hz fixed-timestep simulation loop with an adaptive quality governor and pre-baked bitmap typography atlas."
+    },
+    {
+      "id": "distributed-mesh",
+      "title": "EDGE MESH STREAMER",
+      "category": "INFRASTRUCTURE",
+      "year": "2025",
+      "version": "v2.1",
+      "tech": ["Rust", "WebRTC", "Wasm", "Node.js"],
+      "summary": "Low-latency P2P telemetry streamer operating across decentralized edge nodes with automatic recovery.",
+      "metrics": ["100K Concurrent Streams", "12ms P2P Handshake", "Zero-Loss Fallback"],
+      "demoUrl": "https://github.com",
+      "caseStudy": "Optimized WebRTC data channel packet buffering in Rust/Wasm to maintain stable state sync under high network jitter."
+    }
+  ]
+}
