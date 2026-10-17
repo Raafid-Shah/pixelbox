@@ -1,0 +1,4 @@
+[{"slug":"pixelbox","title":"PIXELBOX","blurb":"A portfolio disguised as a lamp-lit room and a console.","tech":["TypeScript","WebGL2"],"url":"#"},
+ {"slug":"late-byte","title":"LATE BYTE","blurb":"A neon cafe where every cartridge is a case study.","tech":["SVG","WebAudio"],"url":"#"},
+ {"slug":"tube-tv","title":"TUBE TV","blurb":"A curved-glass shader with a channel dial.","tech":["GLSL"],"url":"#"},
+ {"slug":"hearth","title":"HEARTH","blurb":"A cassette jukebox that remembers you.","tech":["IndexedDB"],"url":"#"}]

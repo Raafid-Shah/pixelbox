@@ -1,0 +1,31 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PIXELBOX v3 · The Late Byte Edition</title>
+<style>
+@font-face{font-family:PressStart2P;src:url(/fonts/PressStart2P.woff2) format('woff2');font-display:swap}
+:root{--lamp:255,176,0;--gl:63,169,245;--gc:63,169,245;--gr:63,169,245;--bg:#07090f}
+*{box-sizing:border-box}html,body{margin:0;height:100%;background:var(--bg);color:#f4efe4;font:12px PressStart2P,monospace;overflow:hidden}
+#room{position:fixed;inset:0;background:linear-gradient(#1a1030,#0b0f1a 60%,#2a1a14 60%)}
+#room .win{position:absolute;left:6%;top:8%;width:26%;height:38%;border:6px solid #4f7388;background:linear-gradient(#0b1a3a,#2a1a4a);overflow:hidden}
+#room .win i{position:absolute;bottom:0;width:10%;background:#07090f}
+#room .rain{position:absolute;inset:0;background:repeating-linear-gradient(100deg,transparent 0 6px,rgba(143,184,204,.25) 6px 7px);animation:rain .5s linear infinite}
+@keyframes rain{to{background-position:-14px 28px}}
+#room .neon{position:absolute;right:8%;top:10%;font-size:clamp(14px,3vw,34px);color:#ff4fd8;text-shadow:0 0 8px #ff4fd8,0 0 24px #ff4fd8;animation:fl 4s infinite}
+@keyframes fl{0%,18%,22%,62%,100%{opacity:1}20%,60%{opacity:.35}}
+#room .lamp{position:absolute;left:3%;bottom:30%;width:60%;height:70%;background:radial-gradient(ellipse at 10% 40%,rgba(var(--lamp),.28),transparent 60%);transition:opacity .4s}
+#room.off .lamp{opacity:0}
+#room .spill{position:absolute;inset:0;background:radial-gradient(ellipse 40% 40% at 25% 70%,rgba(var(--gl),.25),transparent),radial-gradient(ellipse 40% 40% at 50% 70%,rgba(var(--gc),.35),transparent),radial-gradient(ellipse 40% 40% at 75% 70%,rgba(var(--gr),.25),transparent);mix-blend-mode:screen}
+#body{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(92vw,calc(88vh*1.45));aspect-ratio:1.45;transition:transform .6s cubic-bezier(.3,1.4,.5,1)}
+#body.dive{transform:translate(-50%,-50%) scale(1.55)}
+#body svg{position:absolute;inset:0;width:100%;height:100%}
+#screen{position:absolute;left:12.5%;top:11%;width:75%;height:56%;border-radius:4%/6%;overflow:hidden;background:#000;box-shadow:inset 0 0 30px #000}
+#screen canvas{width:100%;height:100%;display:block;image-rendering:pixelated}
+#screen::after{content:"";position:absolute;inset:0;background:linear-gradient(115deg,rgba(255,255,255,.12),transparent 30%);pointer-events:none}
+#mirror{position:fixed;right:3%;bottom:6%;width:10vw;min-width:80px;image-rendering:pixelated;border:4px solid #4f7388;border-radius:4px;opacity:.9}
+#hint{position:fixed;left:0;right:0;bottom:6px;text-align:center;font-size:8px;color:#8fb8cc}
+#hint a{color:#ffb000}
+</style></head><body>
+<div id="room"><div class="win"><div class="rain"></div></div><div class="neon">Late Byte</div><div class="lamp"></div><div class="spill"></div></div>
+<div id="body"></div><canvas id="mirror" width="80" height="45"></canvas>
+<div id="hint">ARROWS MOVE · ENTER/Z = A · ESC/X = B · L LAMP · F DIVE · M MUTE · <a href="#classic" id="classic">CLASSIC VIEW</a></div>
+<noscript>Enable JavaScript, or see content/profile.json.</noscript>
+<script type="module" src="/src/main.ts"></script></body></html>
