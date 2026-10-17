@@ -1,1 +1,26 @@
-{"name":"Your Name","role":"Creative Developer","bio":"I build things that feel like objects. Every section of this portfolio is a game and every game is a real project.","stats":{"CRAFT":0.92,"CODE":0.88,"DESIGN":0.8,"COFFEE":1}}
+{
+  "name": "PLAYER ONE",
+  "handle": "LATE.BYTE.DEV",
+  "title": "Creative Systems & Full-Stack Engineer",
+  "location": "Arcade Cafe, 1989",
+  "level": 26,
+  "class": "Systems Architect",
+  "status": "AVAILABLE FOR SELECT QUESTS",
+  "shortPitch": "Building tactile, high-performance web systems, real-time shaders, and deterministic engines where every millisecond and pixel counts.",
+  "bio": [
+    "Welcome to the Late Byte Cafe. Pull up a stool while the rain streaks the window.",
+    "I design and engineer resilient software from the metal up: zero-allocation engines, WebGL2 pipelines, distributed backends, and interfaces that feel like physical hardware.",
+    "Slot a cartridge on the shelf to inspect live architecture, play interactive demos, or tune to Channel 9 for full Teletext documentation."
+  ],
+  "attributes": [
+    { "label": "SYSTEMS & ARCHITECTURE", "value": 96, "code": "SYS" },
+    { "label": "GRAPHICS & SHADERS", "value": 92, "code": "GFX" },
+    { "label": "FULL-STACK DELIVERY", "value": 95, "code": "DEV" },
+    { "label": "PERFORMANCE BUDGETING", "value": 98, "code": "OPT" }
+  ],
+  "attractReelHighlights": [
+    "WHO I AM: Creative Systems & Full-Stack Engineer obsessed with sub-16ms craft.",
+    "FEATURED CARTRIDGES: Distributed AI Workflows, Real-Time WebGL2 Engines, Cloud Scale.",
+    "PRESS ANY KEY TO TAKE CONTROL OR CLICK CLASSIC VIEW FOR INSTANT RESUME."
+  ]
+}
