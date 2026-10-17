@@ -4,7 +4,7 @@ import { bitmapFont } from '../engine/bitmapfont';
 import { content, ProjectEntry } from '../content';
 import { FocusManager } from '../engine/ui/focus';
 import { PanelRenderer } from '../engine/ui/panel';
-import { UI_PALETTE } from '../theme/tokens';
+import { UI_PALETTE } from '../../theme/tokens';
 
 export class MenuScene {
   private focusManager: FocusManager;
@@ -19,10 +19,9 @@ export class MenuScene {
       id: proj.id,
       onFocus: () => {
         this.selectedIndex = idx;
-        this.eventBus.emit('scene:focus', { id: proj.id });
       },
       onSelect: () => {
-        this.eventBus.emit('cartridge:insert', { id: proj.id });
+        this.eventBus.emit('cartridge:insert', { slug: proj.id, title: proj.title });
       },
     }));
 
