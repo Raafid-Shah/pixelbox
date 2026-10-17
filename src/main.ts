@@ -1,36 +1,118 @@
-import { mirrorToCss } from './theme/tokens';
-import { initInput } from './engine/input';
-import { loop } from './engine/loop';
+// src/main.ts
 import { bus } from './engine/bus';
-import { createScreen } from './engine/gl/shader';
-import { toggleDive } from './engine/camera';
-import { broadcastWood } from './hardware/bodies/broadcast-wood';
-import { relight, initLamp } from './room/lighting';
-import { mirror } from './fx/mirror';
-import { startAudio, toggleMute, jingle, blip } from './audio/synth';
-import { createMenu } from './game/scenes/menu';
-import { initAttract } from './experiences/attract';
-import { loadSettings, saveSettings } from './settings/schema';
-import projects from './content/projects.json';
+import { GameLoop, LoopCallbacks } from './engine/loop';
+import { camera } from './engine/camera';
+import { WebGLPipeline } from './engine/gl/pipeline';
+import { bitmapFont } from './engine/bitmapfont';
+import { cafeRoom } from './room/themes/cafe1989';
+import { lighting } from './room/lighting';
+import { mixer } from './audio/mixer';
+import { BroadcastWoodBody } from './hardware/bodies/broadcastwood';
+import { Deck89Body } from './hardware/bodies/deck89';
+import { PrismClearBody } from './hardware/bodies/prismclear';
+import { MenuScene } from './scenes/menu';
+import { classicView } from './scenes/classic';
 
-mirrorToCss();
-const S=loadSettings();
-const room=document.getElementById('room')!,body=document.getElementById('body')!,mir=document.getElementById('mirror') as HTMLCanvasElement;
-broadcastWood.mount(body,{onKnob:(k)=>{ startAudio(); blip(k==='channel'?220:440,.12,'sawtooth'); bus.emit('channel:change',1); }});
-const screen=createScreen(document.getElementById('out') as HTMLCanvasElement);
-Object.assign(screen.params,S.shader);
-const frame=document.createElement('canvas');frame.width=320;frame.height=180;const g=frame.getContext('2d',{willReadFrequently:true})!;g.imageSmoothingEnabled=false;
-const menu=createMenu();initInput();initLamp(room);
+class PixelboxApp {
+  private container?: HTMLElement;
+  private roomLayer?: HTMLElement;
+  private hardwareLayer?: HTMLElement;
+  private offscreenCanvas: HTMLCanvasElement;
+  private offscreenCtx: CanvasRenderingContext2D;
+  private pipeline: WebGLPipeline | null = null;
+  private menuScene?: MenuScene;
+  private activeBody: BroadcastWoodBody | Deck89Body | PrismClearBody;
+  private loop?: GameLoop;
 
-let started=false;const start=()=>{ if(started)return; started=true; startAudio(); jingle(); };
-addEventListener('pointerdown',start);bus.on('input:action',start);
-addEventListener('keydown',e=>{ if(e.key==='f')toggleDive(body,room,S.reducedMotion); if(e.key==='m')S.audio.muted=toggleMute(); });
-addEventListener('beforeunload',()=>saveSettings(S));
-document.getElementById('classic')!.addEventListener('click',e=>{e.preventDefault();document.body.innerHTML='<main style="padding:24px;font:14px/1.6 system-ui;color:#f4efe4;background:#07090f;min-height:100%"><h1>Classic View</h1>'+projects.map(p=>`<h2>${p.title}</h2><p>${p.blurb}</p>`).join('')+'</main>';document.body.style.overflow='auto';});
-initAttract(()=>{ bus.emit('input:action',{a:'RIGHT',down:true}); });
+  constructor() {
+    this.offscreenCanvas = document.createElement('canvas');
+    this.offscreenCanvas.width = 320;
+    this.offscreenCanvas.height = 180;
+    this.offscreenCtx = this.offscreenCanvas.getContext('2d', { willReadFrequently: true })!;
 
-const born=performance.now();let n=0;
-loop((_dt,t)=>{ n++;
-  const warm=Math.min(1,(t-born)/900); menu.draw(g,t);
-  if(warm<1){ const h=Math.max(2,Math.round(180*warm*warm)),y=Math.round((180-h)/2); const snap=g.getImageData(0,y,320,h); g.fillStyle='#000';g.fillRect(0,0,320,180);g.putImageData(snap,0,y); g.fillStyle='rgba(255,255,255,.6)';g.fillRect(0,89,320,Math.max(1,Math.round(2*(1-warm)))); }
-  screen.present(frame,t); relight(frame); mirror(frame,mir,n); });
+    const recommended = camera.detectDeviceAndRecommendSet();
+    if (recommended.defaultSet === 'deck-89') {
+      this.activeBody = new Deck89Body();
+    } else if (recommended.defaultSet === 'pocket-hour') {
+      this.activeBody = new PrismClearBody();
+    } else {
+      this.activeBody = new BroadcastWoodBody();
+    }
+
+    // 1. Check for Classic View URL parameter (?classic=1)
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('classic') === '1') {
+      const root = document.getElementById('app') ?? document.body;
+      classicView.mount(root);
+      return;
+    }
+
+    const root = document.getElementById('app') ?? document.body;
+    root.innerHTML = '';
+    root.style.cssText = 'position: relative; width: 100vw; height: 100vh; overflow: hidden; background: #07090f;';
+
+    // 2. Room Background Layer
+    this.roomLayer = document.createElement('div');
+    this.roomLayer.id = 'pixelbox-room';
+    root.appendChild(this.roomLayer);
+    cafeRoom.mount(this.roomLayer);
+
+    // 3. Stage Wrapper for Hardware & Camera
+    this.container = document.createElement('div');
+    this.container.id = 'pixelbox-stage';
+    this.container.style.cssText = 'position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 10;';
+    root.appendChild(this.container);
+
+    this.hardwareLayer = document.createElement('div');
+    this.container.appendChild(this.hardwareLayer);
+
+    // 4. Initialize WebGL Pipeline
+    this.pipeline = new WebGLPipeline(this.offscreenCanvas, this.hardwareLayer, bus);
+
+    // 5. Mount Hardware Body
+    this.activeBody.mount(this.hardwareLayer, {
+      bus,
+      getScreenCanvas: () => this.pipeline!.getDisplayCanvas(),
+    });
+
+    // 6. Mount Camera Controller
+    camera.mount(this.container, this.roomLayer, () => this.activeBody.screenRect());
+
+    // 7. Initialize Menu Scene & Audio Mixer
+    this.menuScene = new MenuScene(bus);
+    mixer.init();
+
+    // 8. Instantiate GameLoop matching LoopCallbacks signature precisely
+    const callbacks: LoopCallbacks = {
+      update: (_dtMs: number, _frameCount: number) => {
+        // Simulation step
+      },
+      render: (_alpha: number, frameCount: number) => {
+        const nowMs = frameCount * 16.6;
+        this.offscreenCtx.clearRect(0, 0, 320, 180);
+
+        if (bitmapFont.isReady() && this.menuScene) {
+          this.menuScene.render(this.offscreenCtx, nowMs);
+        }
+
+        this.pipeline?.renderFrame();
+      },
+      onLightSampleTick: (_frameCount: number) => {
+        lighting.sampleScreenSpill(this.offscreenCanvas);
+      },
+    };
+
+    this.loop = new GameLoop(callbacks, bus);
+    this.loop.start();
+
+    bus.on('power:toggle', () => {
+      mixer.setSpeakerProfile(this.activeBody.speaker);
+    });
+  }
+}
+
+if (typeof window !== 'undefined') {
+  window.addEventListener('DOMContentLoaded', () => {
+    new PixelboxApp();
+  });
+}
