@@ -1,1 +1,7 @@
-{"slots":[{"label":"EMAIL","value":"hello@example.com"},{"label":"GITHUB","value":"github.com/you"},{"label":"LINKEDIN","value":"linkedin.com/in/you"}]}
+{
+  "email": "player.one@pixelbox.dev",
+  "github": "https://github.com",
+  "linkedin": "https://linkedin.com",
+  "easterEggPassword": "LATEBYTE1989",
+  "secretReward": "Unlocked: Secret Arcade Neon Palette!"
+}
