@@ -1,1 +1,9 @@
-[{"name":"TypeScript","level":0.9},{"name":"WebGL","level":0.75},{"name":"Audio","level":0.7},{"name":"Design","level":0.8}]
+{
+  "skills": [
+    { "id": "ts", "name": "TYPESCRIPT", "level": "EXPERT", "gauge": 98, "icon": "⚡" },
+    { "id": "webgl", "name": "WEBGL2 & SHADERS", "level": "ADVANCED", "gauge": 90, "icon": "🖥️" },
+    { "id": "rust", "name": "RUST & WASM", "level": "ADVANCED", "gauge": 85, "icon": "⚙️" },
+    { "id": "ai", "name": "AGENTIC WORKFLOWS", "level": "EXPERT", "gauge": 95, "icon": "🤖" },
+    { "id": "sys", "name": "DISTRIBUTED SYS", "level": "ADVANCED", "gauge": 92, "icon": "🌐" }
+  ]
+}
